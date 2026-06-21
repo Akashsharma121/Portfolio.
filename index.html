@@ -450,7 +450,9 @@
         </div>
 
         <div class="contact-box reveal">
-          <form id="contactForm">
+          <form id="contactForm" action="https://api.staticforms.dev/submit" method="POST">
+            <input type="hidden" name="apiKey" id="apiKey" value="sf_ad40626a83d1290e9c312b21">
+            <input type="hidden" name="replyTo" value="">
             <div class="field-box">
               <input type="text" placeholder="Full Name" id="name" name="name" class="item" autocomplete="name" required>
               <input type="email" placeholder="Email Address" id="email" name="email" class="item" autocomplete="email" required>
@@ -477,7 +479,6 @@
 
   <!-- custom js -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
