@@ -138,19 +138,23 @@ arrowLeft.addEventListener('click', () => {
 });
 
 /* ============================================================
-   CONTACT FORM — EmailJS (client-safe, no exposed secrets)
+   CONTACT FORM — Static Forms (client-safe, no exposed secrets)
+   ============================================================
+
+   SETUP REQUIRED (one-time, takes ~1 minute):
+   1. Create a free account at https://www.staticforms.dev
+   2. Your dashboard gives you an API key automatically.
+   3. Open index.html, find the hidden "apiKey" input inside
+      <form id="contactForm" ...>, and replace YOUR_API_KEY
+      with your real key.
+
+   This is safe to expose publicly — Static Forms API keys are
+   designed to be used directly in client-side HTML.
    ============================================================ */
-
-const EMAILJS_SERVICE_ID = 'service_sn8ot7q';
-const EMAILJS_TEMPLATE_ID = 'template_5sei4j7';
-const EMAILJS_PUBLIC_KEY = 'zxmAg07c2fW2gpNhl';
-
-if (window.emailjs && EMAILJS_PUBLIC_KEY) {
-  emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
-}
 
 const form = document.querySelector('#contactForm');
 const submitBtn = document.querySelector('#submitBtn');
+const apiKeyField = document.querySelector('#apiKey');
 
 function showAlert(title, text, icon) {
   if (window.Swal) {
@@ -186,26 +190,38 @@ form.addEventListener('submit', (e) => {
 
   if (!validateForm(data)) return;
 
-  if (EMAILJS_SERVICE_ID === 'service_sn8ot7q') {
+  if (apiKeyField.value === 'YOUR_API_KEY') {
     showAlert(
       'Almost there!',
-      'Contact form isn\'t connected yet — add your EmailJS IDs in script.js to activate it.',
+      'Contact form isn\'t connected yet — add your Static Forms API key in index.html to activate it.',
       'info'
     );
     return;
   }
 
+  // set reply-to so replies in your inbox go straight back to the sender
+  form.querySelector('input[name="replyTo"]').value = data.email;
+
   submitBtn.disabled = true;
   submitBtn.querySelector('.btn-text').textContent = 'Sending...';
 
-  emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, data)
-    .then(() => {
-      showAlert('Success!', 'Your message has been sent. I\'ll get back to you soon.', 'success');
-      form.reset();
+  fetch(form.action, {
+    method: 'POST',
+    headers: { 'Accept': 'application/json' },
+    body: new FormData(form),
+  })
+    .then((response) => response.json().then((result) => ({ ok: response.ok, result })))
+    .then(({ ok, result }) => {
+      if (ok && result.success) {
+        showAlert('Success!', 'Your message has been sent. I\'ll get back to you soon.', 'success');
+        form.reset();
+      } else {
+        throw new Error(result.message || result.error || 'Submission failed');
+      }
     })
     .catch((error) => {
       showAlert('Error', 'Something went wrong. Please try again or email me directly.', 'error');
-      console.error('EmailJS error:', error);
+      console.error('Static Forms error:', error);
     })
     .finally(() => {
       submitBtn.disabled = false;
