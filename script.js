@@ -139,18 +139,6 @@ arrowLeft.addEventListener('click', () => {
 
 /* ============================================================
    CONTACT FORM — EmailJS (client-safe, no exposed secrets)
-   ============================================================
-
-   SETUP REQUIRED (one-time, takes ~5 minutes):
-   1. Create a free account at https://www.emailjs.com
-   2. Add an Email Service (e.g. Gmail) -> copy the SERVICE_ID
-   3. Create an Email Template -> copy the TEMPLATE_ID
-      Template should use variables: {{name}}, {{email}}, {{phone}}, {{subject}}, {{message}}
-   4. Go to Account > General -> copy your PUBLIC_KEY
-   5. Paste all three values into the constants below.
-
-   This is safe to expose publicly — EmailJS public keys are
-   designed to be used client-side, unlike SMTP passwords.
    ============================================================ */
 
 const EMAILJS_SERVICE_ID = 'service_sn8ot7q';
