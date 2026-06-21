@@ -143,9 +143,9 @@ arrowLeft.addEventListener('click', () => {
 
 const EMAILJS_SERVICE_ID = 'service_sn8ot7q';
 const EMAILJS_TEMPLATE_ID = 'template_tc6j6zy';
-const EMAILJS_PUBLIC_KEY = 'zxmAg07c2fW2gpNhl';
+const EMAILJS_PUBLIC_KEY = 'sukTF5Bw3wbLYm4h3';
 
-if (window.emailjs && EMAILJS_PUBLIC_KEY !== 'zxmAg07c2fW2gpNhl') {
+if (window.emailjs && EMAILJS_PUBLIC_KEY !== 'sukTF5Bw3wbLYm4h3') {
   emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
 }
 
