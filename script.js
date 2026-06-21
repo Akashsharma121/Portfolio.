@@ -142,7 +142,7 @@ arrowLeft.addEventListener('click', () => {
    ============================================================ */
 
 const EMAILJS_SERVICE_ID = 'service_sn8ot7q';
-const EMAILJS_TEMPLATE_ID = 'template_tc6j6zy';
+const EMAILJS_TEMPLATE_ID = 'template_5sei4j7';
 const EMAILJS_PUBLIC_KEY = 'sukTF5Bw3wbLYm4h3';
 
 if (window.emailjs && EMAILJS_PUBLIC_KEY !== 'sukTF5Bw3wbLYm4h3') {
