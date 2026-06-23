@@ -50,65 +50,110 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: opacity .6s ease, visibility .6s ease;
+  overflow: hidden;
+  transition: opacity .6s ease, visibility .6s ease, transform .7s cubic-bezier(.76,0,.24,1);
 }
 
 .preloader.hide {
   opacity: 0;
   visibility: hidden;
+  transform: translateY(-4%) scale(1.02);
+  pointer-events: none;
+}
+
+.preloader-bg-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(6rem);
+  opacity: .35;
+  background: var(--main-color);
+  animation: blob-float 6s ease-in-out infinite;
+}
+
+.blob-a { width: 32rem; height: 32rem; top: -8rem; left: -8rem; animation-delay: 0s; }
+.blob-b { width: 26rem; height: 26rem; bottom: -6rem; right: -6rem; background: #3da9fc; animation-delay: -3s; }
+
+@keyframes blob-float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(3rem, -2rem) scale(1.15); }
 }
 
 .preloader-content {
   position: relative;
-  width: 9rem;
-  height: 9rem;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2.2rem;
+}
+
+.preloader-logo {
+  display: flex;
+  font-size: 5.2rem;
+  font-weight: 800;
+  letter-spacing: .3rem;
+  color: var(--white-color);
+}
+
+.preloader-logo .letter {
+  display: inline-block;
+  opacity: 0;
+  color: var(--main-color);
+  animation: letter-pop .7s ease forwards;
+}
+
+.preloader-logo .letter:nth-child(1) { animation-delay: .05s; }
+.preloader-logo .letter:nth-child(2) { animation-delay: .25s; color: var(--white-color); }
+
+@keyframes letter-pop {
+  0% { opacity: 0; transform: translateY(1.4rem) scale(.7); filter: blur(.4rem); }
+  60% { opacity: 1; transform: translateY(-.3rem) scale(1.05); filter: blur(0); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.preloader-bar-track {
+  position: relative;
+  width: 16rem;
+  height: .5rem;
+  background: var(--second-bg-color);
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+.preloader-bar-fill {
+  position: absolute;
+  inset: 0;
+  width: 40%;
+  border-radius: 1rem;
+  background: linear-gradient(90deg, transparent, var(--main-color), #3da9fc, transparent);
+  animation: bar-sweep 1.3s ease-in-out infinite;
+}
+
+@keyframes bar-sweep {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(250%); }
+}
+
+.preloader-status {
+  font-size: 1.4rem;
+  color: var(--grey-color);
+  letter-spacing: .15rem;
+  text-transform: uppercase;
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: .3rem;
 }
 
-.preloader-ring {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  transform: rotate(-90deg);
+.preloader-status .dots span {
+  animation: dot-blink 1.4s ease-in-out infinite;
 }
 
-.preloader-ring circle {
-  fill: none;
-  stroke: var(--second-bg-color);
-  stroke-width: 6;
-}
+.preloader-status .dots span:nth-child(2) { animation-delay: .2s; }
+.preloader-status .dots span:nth-child(3) { animation-delay: .4s; }
 
-.preloader-ring::after { content: ''; }
-
-.preloader-content::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  border: .4rem solid var(--second-bg-color);
-}
-
-.preloader-content::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  border: .4rem solid transparent;
-  border-top-color: var(--main-color);
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  100% { transform: rotate(360deg); }
-}
-
-.preloader-text {
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: var(--main-color);
-  letter-spacing: .1rem;
+@keyframes dot-blink {
+  0%, 100% { opacity: .2; }
+  50% { opacity: 1; }
 }
 
 /* ===================== SCROLL PROGRESS ===================== */
@@ -203,6 +248,11 @@ section {
   min-height: 100vh;
   width: 100%;
   padding: 12rem 9% 8rem;
+}
+
+/* Cap content width on very large monitors so it doesn't stretch edge-to-edge */
+@media screen and (min-width: 1700px) {
+  section, header { padding-left: calc(50vw - 76rem); padding-right: calc(50vw - 76rem); }
 }
 
 .section-label {
@@ -997,24 +1047,24 @@ textarea:-webkit-autofill {
 }
 
 /* ===================== BREAKPOINTS ===================== */
+
+/* Large laptops / small desktops */
 @media screen and (max-width: 1200px) {
-  html { font-size: 55%; }
+  html { font-size: 56%; }
 }
 
-@media screen and (max-width: 992px) {
-  header { padding: 2rem 4%; }
-  header.scrolled { padding: 1.4rem 4%; }
-  section { padding: 11rem 4% 6rem; }
-  .resume-container { grid-template-columns: 1fr; }
-  .resume-tabs { flex-direction: row; flex-wrap: wrap; }
-  .resume-btn { width: auto; flex: 1; min-width: 14rem; }
-}
+/* =====================================================================
+   TABLETS & iPad — 601px to 1112px (covers iPad mini/Air/Pro, portrait
+   AND landscape). Tuned separately from phones/desktop to fix the
+   excess whitespace / loose alignment tablets were showing.
+   ===================================================================== */
+@media screen and (min-width: 601px) and (max-width: 1112px) {
+  html { font-size: 58%; }
 
-@media screen and (max-width: 810px) {
-  .field-box { grid-template-columns: 1fr; }
-}
+  header { padding: 1.8rem 5%; }
+  header.scrolled { padding: 1.3rem 5%; }
+  section { padding: 10rem 5% 6rem; }
 
-@media screen and (max-width: 768px) {
   #menu-icon { display: block; }
 
   nav {
@@ -1031,45 +1081,185 @@ textarea:-webkit-autofill {
     text-align: center;
     clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
     transition: clip-path .4s ease;
+    max-height: 80vh;
+    overflow-y: auto;
   }
 
-  nav.active {
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  nav.active { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+  nav a { display: block; margin: 1.6rem 0; }
+
+  /* ---- HERO ---- */
+  .home {
+    gap: 5%;
+    padding-top: 11rem;
+    justify-content: center;
   }
 
-  nav a {
-    display: block;
-    margin: 1.6rem 0;
+  .home-detail { max-width: 46rem; }
+  .home-detail h1 { font-size: clamp(3.6rem, 5.4vw, 5rem); }
+  .home-desc { font-size: 1.55rem; }
+
+  .home-img .img-box { width: 28rem; height: 28rem; flex-shrink: 0; }
+  .float-badge { font-size: 1.3rem; padding: .7rem 1.2rem; }
+
+  /* ---- SERVICES: fixed 2-column grid instead of loose auto-fit ---- */
+  .services-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
   }
+
+  /* ---- RESUME: fixed 2-column tabs + 1-column detail list ---- */
+  .resume-container { grid-template-columns: 1fr; gap: 3rem; }
+  .resume-tabs { flex-direction: row; flex-wrap: wrap; gap: 1rem; }
+  .resume-btn { width: auto; flex: 1 1 calc(50% - .5rem); min-width: 16rem; }
+  .resume-list { grid-template-columns: repeat(2, 1fr); }
+  .skills-list { grid-template-columns: repeat(4, 1fr); }
+  .about-list { grid-template-columns: repeat(2, 1fr); gap: 0 2rem; }
+
+  /* ---- PORTFOLIO: stack with full-width carousel, no leftover gap ---- */
+  .portfolio-container {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+  .portfolio-container .portfolio-box:first-child { order: 2; }
+  .portfolio-carousel { height: 40rem; }
+
+  /* ---- CONTACT: balanced 2-column, fields stay 2-up ---- */
+  .contact-container { grid-template-columns: .9fr 1.1fr; gap: 3rem; }
+  .field-box { grid-template-columns: repeat(2, 1fr); gap: 1.6rem; }
+}
+
+/* Narrower tablets / iPad mini portrait — tighten the 2-col grids to 1 where cramped */
+@media screen and (min-width: 601px) and (max-width: 850px) {
+  .home {
+    flex-direction: column;
+    text-align: center;
+    padding-top: 12rem;
+  }
+  .home-detail { max-width: 56rem; }
+  .home-detail h2 { justify-content: center; }
+  .btn-sci { justify-content: center; }
+  .home-img { order: -1; }
+
+  .resume-btn { flex: 1 1 100%; }
+  .about-list { grid-template-columns: 1fr; }
+  .contact-container { grid-template-columns: 1fr; }
+}
+
+/* =====================================================================
+   LARGE TABLETS — LANDSCAPE (iPad Air/Pro, Galaxy Tab landscape: ~1113-1366px)
+   These were falling through to bare desktop rules with too much unused
+   whitespace. Give them their own tuned proportions instead of jumping
+   straight to the 1200px/1700px desktop scale.
+   ===================================================================== */
+@media screen and (min-width: 1113px) and (max-width: 1366px) {
+  html { font-size: 60%; }
+
+  section { padding: 11rem 6% 7rem; }
+
+  .home { gap: 6rem; }
+  .home-detail { max-width: 50rem; }
+  .home-img .img-box { width: 32rem; height: 32rem; }
+
+  .services-container { grid-template-columns: repeat(3, 1fr); }
+  .resume-list { grid-template-columns: repeat(2, 1fr); }
+  .skills-list { grid-template-columns: repeat(4, 1fr); }
+
+  .portfolio-carousel { height: 42rem; }
+  .contact-container { grid-template-columns: 1fr 1.2fr; }
+}
+
+/* Phones (landscape & portrait) */
+@media screen and (max-width: 600px) {
+  #menu-icon { display: block; }
+
+  nav {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    flex-direction: column;
+    padding: 1rem 0 2rem;
+    background: rgba(31, 36, 45, .98);
+    backdrop-filter: blur(1rem);
+    border-top: .1rem solid var(--card-border);
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.3);
+    text-align: center;
+    clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+    transition: clip-path .4s ease;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+
+  nav.active { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+  nav a { display: block; margin: 1.6rem 0; }
+
+  header { padding: 1.8rem 5%; }
+  header.scrolled { padding: 1.3rem 5%; }
+  section { padding: 10rem 5% 6rem; }
 
   .home {
     flex-direction: column-reverse;
     text-align: center;
     gap: 3rem;
     padding-top: 11rem;
+    min-height: auto;
+    padding-bottom: 6rem;
   }
 
   .home-detail { max-width: 100%; }
   .home-detail h2 { justify-content: center; }
   .btn-sci { justify-content: center; }
 
-  .home-img .img-box { width: 26rem; height: 26rem; }
-  .float-badge { display: none; }
+  .home-img .img-box { width: 22rem; height: 22rem; }
+  .float-badge { font-size: 1.2rem; padding: .6rem 1rem; }
+  .float-badge span { display: none; }
+  .badge-1 { left: -2%; }
+  .badge-2 { right: -2%; }
+  .badge-3 { left: 2%; }
   .dynamic-text { min-width: 100%; }
 
-  .portfolio-container,
-  .contact-container { grid-template-columns: 1fr; }
+  .heading { font-size: 3.4rem; }
 
-  .portfolio-container .portfolio-box:first-child { order: 2; }
-}
-
-@media screen and (max-width: 600px) {
-  .home-img .img-box { width: 22rem; height: 22rem; }
-  .field-box { grid-template-columns: 1fr; }
+  .services-container { grid-template-columns: 1fr; }
   .resume-tabs { flex-direction: column; }
+  .resume-list { grid-template-columns: 1fr; }
+  .skills-list { grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); }
+  .about-list { grid-template-columns: 1fr; }
+
+  .portfolio-container { grid-template-columns: 1fr; }
+  .portfolio-container .portfolio-box:first-child { order: 2; }
+  .portfolio-carousel { height: 30rem; }
+  .navigation { text-align: center; }
+
+  .contact-container { grid-template-columns: 1fr; }
+  .field-box { grid-template-columns: 1fr; }
+  .live-github { flex-wrap: wrap; }
 }
 
+/* Short / landscape phones — preserve vertical breathing room */
+@media screen and (max-height: 480px) and (orientation: landscape) {
+  section { min-height: auto; padding: 9rem 5% 5rem; }
+  .home { padding-top: 9rem; min-height: auto; }
+  .home-img .img-box { width: 18rem; height: 18rem; }
+}
+
+/* Small / narrow phones */
 @media screen and (max-width: 450px) {
   html { font-size: 50%; }
   .back-to-top { width: 4.4rem; height: 4.4rem; bottom: 2rem; right: 2rem; }
+  .home-detail h1 { font-size: 3.4rem; }
+  .home-img .img-box { width: 18rem; height: 18rem; }
+  .btn { padding: 1.1rem 2.4rem; font-size: 1.5rem; }
+  .preloader-logo { font-size: 4rem; }
+  .preloader-bar-track { width: 13rem; }
+}
+
+/* Extra-small phones (e.g. SE/older devices) */
+@media screen and (max-width: 360px) {
+  html { font-size: 46%; }
+  header { padding: 1.6rem 4%; }
+  .logo { font-size: 2.2rem; }
+  .home-img .img-box { width: 16rem; height: 16rem; }
+  .sci a { padding: .7rem; font-size: 1.6rem; }
 }
